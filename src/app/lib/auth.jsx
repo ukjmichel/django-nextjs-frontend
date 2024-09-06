@@ -8,14 +8,14 @@ const TOKEN_AGE = 3600;
 
 export async function getToken() {
   const cookieStore = cookies();
-  const authToken = cookieStore.get('TOKEN_NAME');
+  const authToken = cookieStore.get(TOKEN_NAME);
   return authToken?.value || null;
 }
 
 export async function setToken(token) {
   const cookieStore = cookies();
   cookieStore.set({
-    name: 'TOKEN_NAME',
+    name: TOKEN_NAME,
     value: token,
     httpOnly: true,
     sameSite: 'strict',
@@ -26,7 +26,7 @@ export async function setToken(token) {
 
 export async function deleteToken() {
   const cookieStore = cookies();
-  cookieStore.delete('TOKEN_NAME', {
+  cookieStore.delete(TOKEN_NAME, {
     httpOnly: true,
     sameSite: 'strict',
     secure: process.env.NODE_ENV === 'production', // Secure only in production

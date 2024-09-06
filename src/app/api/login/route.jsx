@@ -32,7 +32,7 @@ export async function POST(request) {
       setRefreshToken(refresh);
 
       return NextResponse.json(
-        { message: 'Login successful', cookie: access },
+        { loggedIn: true, message: 'Login successful', cookie: access },
         { status: 200 }
       );
     } else {

@@ -1,8 +1,11 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 const LOGIN_URL = '/api/login';
 
 const LoginPage = () => {
+  const router = useRouter();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -24,6 +27,7 @@ const LoginPage = () => {
     console.log(data);
     if (response.ok) {
       console.log('logged in');
+      router.replace('/');
     } else {
       console.error('Failed to login:', response.status, response.statusText);
     }
