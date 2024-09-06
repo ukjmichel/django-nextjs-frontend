@@ -1,6 +1,6 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import { setRefreshToken, setToken } from '@/app/lib/auth';
 import { NextResponse } from 'next/server';
 
 const DJANGO_API_LOGIN_URL = 'http://127.0.0.1:8000/api/token/pair';
@@ -25,20 +25,14 @@ export async function POST(request) {
 
     if (response.ok) {
       console.log('Login successful:', responseData);
-      const authToken = responseData.access;
+      const { access, refresh } = responseData.access;
 
       // Set the auth token in a cookie
-      cookies().set({
-        name: 'auth-token',
-        value: authToken,
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV === 'production', // Secure only in production
-        maxAge: 3600, // 1 hour
-      });
+      setToken(access);
+      setRefreshToken(refresh);
 
       return NextResponse.json(
-        { message: 'Login successful', cookie: authToken },
+        { message: 'Login successful', cookie: access },
         { status: 200 }
       );
     } else {
