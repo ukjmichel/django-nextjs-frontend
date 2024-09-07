@@ -1,16 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
 import useSWR from 'swr';
 
 const fetcher = (...arg) => fetch(...arg).then((res) => res.json());
 
-export default function Home() {
-  const { data, error, isLoading } = useSWR(
-    'http://127.0.0.1:8000/api/hello',
-    fetcher
-  );
+const WAITLIST_API_URL = '/api/waitlists';
+
+export default function WaitlistPage() {
+  const { data, error, isLoading } = useSWR(WAITLIST_API_URL, fetcher);
   if (error) {
     return <div>failed to load</div>;
   }
@@ -18,15 +16,6 @@ export default function Home() {
     return <div>loading...</div>;
   }
 
-  // async function getDjangoAPIData() {
-  //   const response = await fetch('http://127.0.0.1:8000/api/hello');
-  //   const responseData = await response.json();
-  //   setData(responseData);
-  // }
-
-  // async function handleClick() {
-  //   await getDjangoAPIData();
-  // }
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -38,6 +27,9 @@ export default function Home() {
           height={38}
           priority
         />
+        <div className=" text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+          {JSON.stringify(data)}
+        </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a
@@ -45,12 +37,6 @@ export default function Home() {
             className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
           >
             Home
-          </a>
-          <a
-            href="http://127.0.0.1:3001/waitlists"
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-          >
-            Waitlists
           </a>
           <a
             href="http://127.0.0.1:3001/login"
@@ -65,9 +51,6 @@ export default function Home() {
           >
             Logout
           </a>
-        </div>
-        <div className=" text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          {JSON.stringify(data)}
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">

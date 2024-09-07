@@ -25,16 +25,28 @@ export async function POST(request) {
 
     if (response.ok) {
       console.log('Login successful:', responseData);
-      const { access, refresh } = responseData.access;
+      const { access, refresh } = responseData;
 
-      // Set the auth token in a cookie
-      setToken(access);
-      setRefreshToken(refresh);
+      // Ensure access and refresh tokens are properly extracted
+      if (access && refresh) {
+        // Set the auth token in a cookie
+        await setToken(access);
+        await setRefreshToken(refresh);
 
-      return NextResponse.json(
-        { loggedIn: true, message: 'Login successful', cookie: access },
-        { status: 200 }
-      );
+        return NextResponse.json(
+          { loggedIn: true, message: 'Login successful' },
+          { status: 200 }
+        );
+      } else {
+        console.error(
+          'Missing access or refresh token in response:',
+          responseData
+        );
+        return NextResponse.json(
+          { error: 'Invalid response data' },
+          { status: 500 }
+        );
+      }
     } else {
       console.error('Failed to login:', response.status, response.statusText);
       return NextResponse.json(
