@@ -1,11 +1,12 @@
 'use client';
 
 import { useAuth } from '@/components/authProvider';
+import { ThemeToggleButton } from '@/components/themeToggleButton';
+import { fetcher } from '@/lib/fetcher';
 import Image from 'next/image';
-import { useState } from 'react';
 import useSWR from 'swr';
-
-const fetcher = (...arg) => fetch(...arg).then((res) => res.json());
+import Link from 'next/link'; // Import Next.js Link
+import { Button } from '@/components/ui/button'; // Assuming you're using ShadCN's Button component
 
 export default function Home() {
   const auth = useAuth();
@@ -13,16 +14,18 @@ export default function Home() {
     'http://127.0.0.1:8000/api/hello',
     fetcher
   );
+
   if (error) {
-    return <div>failed to load</div>;
+    return <div>Failed to load</div>;
   }
+
   if (isLoading) {
-    return <div>loading...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center ">
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+      <main className="flex flex-col gap-8 row-start-2 items-center">
         <Image
           className="dark:invert"
           src="https://nextjs.org/icons/next.svg"
@@ -33,42 +36,33 @@ export default function Home() {
         />
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            href="http://127.0.0.1:3001/"
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-          >
-            Home
-          </a>
-          <a
-            href="http://127.0.0.1:3001/waitlists"
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-          >
-            Waitlists
-          </a>
-          <a
-            href="http://127.0.0.1:3001/login"
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-          >
-            Login
-          </a>
-
-          <a
-            href="http://127.0.0.1:3001/logout"
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-          >
-            Logout
-          </a>
+          {/* Use Link for client-side navigation */}
+          <Link href="http://127.0.0.1:3001/" passHref>
+            <Button>Home</Button>
+          </Link>
+          <Link href="http://127.0.0.1:3001/waitlists" passHref>
+            <Button>Waitlists</Button>
+          </Link>
+          <Link href="http://127.0.0.1:3001/login" passHref>
+            <Button>Login</Button>
+          </Link>
+          <Link href="http://127.0.0.1:3001/logout" passHref>
+            <Button>Logout</Button>
+          </Link>
+          <ThemeToggleButton />
         </div>
-        <div className=" text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+
+        <div className="text-sm text-center sm:text-left">
           {auth.isAuthenticated ? 'Hello user' : 'Hello guest'}
         </div>
-        <div className=" text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+        <div className="text-sm text-center sm:text-left">
           {JSON.stringify(data)}
         </div>
       </main>
+
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+        <Link
+          className="flex items-center gap-2 hover:underline"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
@@ -81,9 +75,9 @@ export default function Home() {
             height={16}
           />
           Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+        </Link>
+        <Link
+          className="flex items-center gap-2 hover:underline"
           href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
@@ -96,10 +90,10 @@ export default function Home() {
             height={16}
           />
           Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+        </Link>
+        <Link
+          className="flex items-center gap-2 hover:underline"
+          href="https://nextjs.org"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -111,7 +105,7 @@ export default function Home() {
             height={16}
           />
           Go to nextjs.org →
-        </a>
+        </Link>
       </footer>
     </div>
   );
