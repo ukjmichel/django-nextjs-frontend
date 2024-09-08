@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@/components/authProvider';
 import Image from 'next/image';
 import { useState } from 'react';
 import useSWR from 'swr';
@@ -7,6 +8,7 @@ import useSWR from 'swr';
 const fetcher = (...arg) => fetch(...arg).then((res) => res.json());
 
 export default function Home() {
+  const auth = useAuth();
   const { data, error, isLoading } = useSWR(
     'http://127.0.0.1:8000/api/hello',
     fetcher
@@ -18,18 +20,9 @@ export default function Home() {
     return <div>loading...</div>;
   }
 
-  // async function getDjangoAPIData() {
-  //   const response = await fetch('http://127.0.0.1:8000/api/hello');
-  //   const responseData = await response.json();
-  //   setData(responseData);
-  // }
-
-  // async function handleClick() {
-  //   await getDjangoAPIData();
-  // }
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+      <main className="flex flex-col gap-8 row-start-2 items-center ">
         <Image
           className="dark:invert"
           src="https://nextjs.org/icons/next.svg"
@@ -65,6 +58,9 @@ export default function Home() {
           >
             Logout
           </a>
+        </div>
+        <div className=" text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+          {auth.isAuthenticated ? 'Hello user' : 'Hello guest'}
         </div>
         <div className=" text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           {JSON.stringify(data)}

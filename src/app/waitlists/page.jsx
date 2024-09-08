@@ -18,7 +18,7 @@ export default function WaitlistPage() {
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+      <main className="flex flex-col gap-8 row-start-2 items-center">
         <Image
           className="dark:invert"
           src="https://nextjs.org/icons/next.svg"
@@ -27,9 +27,6 @@ export default function WaitlistPage() {
           height={38}
           priority
         />
-        <div className=" text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          {JSON.stringify(data)}
-        </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a
@@ -51,6 +48,9 @@ export default function WaitlistPage() {
           >
             Logout
           </a>
+        </div>
+        <div className=" text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+          {JSON.stringify(data)}
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
