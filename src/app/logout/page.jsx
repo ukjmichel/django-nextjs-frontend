@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/components/authProvider';
 
@@ -8,7 +7,7 @@ const LOGOUT_URL = '/api/logout';
 
 export default function LogoutPage() {
   const auth = useAuth();
-  const router = useRouter();
+
   const handleLogout = async () => {
     const requestOptions = {
       method: 'POST',
@@ -25,7 +24,6 @@ export default function LogoutPage() {
         console.log('Successfully logged out');
         auth.logout();
         // Optionally, redirect or clear user data after logout
-        router.replace('/');
       } else {
         console.error(
           'Failed to logout:',

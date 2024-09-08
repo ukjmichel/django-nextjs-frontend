@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/components/authProvider';
 
@@ -8,7 +7,6 @@ const LOGIN_URL = '/api/login';
 
 const LoginPage = () => {
   const auth = useAuth();
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +30,6 @@ const LoginPage = () => {
     if (response.ok) {
       console.log('logged in');
       auth.login();
-      router.replace('/');
     } else {
       console.error('Failed to login:', response.status, response.statusText);
     }

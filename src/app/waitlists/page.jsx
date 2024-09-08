@@ -1,19 +1,30 @@
 'use client';
 
+import { useAuth } from '@/components/authProvider';
 import Image from 'next/image';
+import { useEffect } from 'react';
 import useSWR from 'swr';
-
-const fetcher = (...arg) => fetch(...arg).then((res) => res.json());
+import { fetcher } from '@/lib/fetcher';
 
 const WAITLIST_API_URL = '/api/waitlists';
 
 export default function WaitlistPage() {
-  const { data, error, isLoading } = useSWR(WAITLIST_API_URL, fetcher);
-  if (error) {
-    return <div>failed to load</div>;
+  const { data, error } = useSWR(WAITLIST_API_URL, fetcher);
+  const auth = useAuth();
+  console.log('status: ', error?.status);
+
+  useEffect(() => {
+    if (error?.status === 401) {
+      auth.loginRequiredRedirect();
+    }
+  }, [auth, error]);
+
+  if (!data && !error) {
+    return <div>Loading...</div>; // Handling the loading state
   }
-  if (isLoading) {
-    return <div>loading...</div>;
+
+  if (error) {
+    return <div>Failed to load</div>;
   }
 
   return (
@@ -30,26 +41,25 @@ export default function WaitlistPage() {
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a
-            href="http://127.0.0.1:3001/"
+            href="/"
             className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
           >
             Home
           </a>
           <a
-            href="http://127.0.0.1:3001/login"
+            href="/login"
             className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
           >
             Login
           </a>
-
           <a
-            href="http://127.0.0.1:3001/logout"
+            href="/logout"
             className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
           >
             Logout
           </a>
         </div>
-        <div className=" text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+        <div className="text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           {JSON.stringify(data)}
         </div>
       </main>
