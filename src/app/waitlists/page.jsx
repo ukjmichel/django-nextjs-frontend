@@ -10,6 +10,15 @@ import BaseLayout from '@/components/layout/baseLayout';
 
 const WAITLIST_API_URL = '/api/waitlists';
 
+// Utility function to format date as yyyy-mm-dd
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export default function WaitlistPage() {
   const { data, error } = useSWR(WAITLIST_API_URL, fetcher);
   const auth = useAuth();
@@ -46,8 +55,8 @@ export default function WaitlistPage() {
               <tr key={item.id}>
                 <td className="border p-2">{item.id}</td>
                 <td className="border p-2">{item.email}</td>
-                <td className="border p-2">{item.updated}</td>
-                <td className="border p-2">{item.timestamp}</td>
+                <td className="border p-2">{formatDate(item.updated)}</td>
+                <td className="border p-2">{formatDate(item.timestamp)}</td>
               </tr>
             ))}
           </tbody>
