@@ -26,7 +26,7 @@ export function ThemeToggleButton() {
             resolvedTheme === 'dark'
               ? 'bg-white text-black' // Light button for dark mode
               : 'bg-black text-white' // Dark button for light mode
-          }`}
+          } w-48 sm:w-10 `}
         >
           <SunIcon
             className={`h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0`}

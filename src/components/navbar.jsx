@@ -1,25 +1,32 @@
 'use client';
 
+// Import dynamic from next/dynamic
 import Link from 'next/link';
-import { Button } from './ui/button';
 import { ThemeToggleButton } from './themeToggleButton';
+import NavButton from './navButton';
+import { useAuth } from './authProvider';
 
 export function Navbar() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="flex gap-4 items-center flex-col sm:flex-row">
-      {/* Use Link for client-side navigation */}
-      <Link href="http://127.0.0.1:3001/" passHref>
-        <Button>Home</Button>
+      <Link href="/">
+        <NavButton>Home</NavButton>
       </Link>
-      <Link href="http://127.0.0.1:3001/waitlists" passHref>
-        <Button>Waitlists</Button>
+      <Link href="/waitlists">
+        <NavButton>Waitlists</NavButton>
       </Link>
-      <Link href="http://127.0.0.1:3001/login" passHref>
-        <Button>Login</Button>
-      </Link>
-      <Link href="http://127.0.0.1:3001/logout" passHref>
-        <Button>Logout</Button>
-      </Link>
+      {!isAuthenticated && (
+        <Link href="/login">
+          <NavButton>Login</NavButton>
+        </Link>
+      )}
+      {isAuthenticated && (
+        <Link href="/logout">
+          <NavButton>Logout</NavButton>
+        </Link>
+      )}
       <ThemeToggleButton />
     </div>
   );

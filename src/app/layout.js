@@ -28,15 +28,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'min-h-screen bg-background font-sans antialiased',
+          'min-h-screen bg-background antialiased',
           fontSans.variable
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="light">
-          <AuthProvider> {children}</AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </body>
     </html>

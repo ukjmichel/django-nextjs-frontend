@@ -11,26 +11,29 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/components/authProvider'; // Import useAuth
+import { useAuth } from '@/components/authProvider';
+import { useState } from 'react';
 
 const LOGIN_URL = '/api/login';
 
 export default function LoginForm() {
   const auth = useAuth();
+  const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const user = {
+      username: formData.get('username'),
+      password: formData.get('password'),
+    };
 
-    const formData = new FormData(e.target);
-    const formDataObject = Object.fromEntries(formData);
-    const jsonData = JSON.stringify(formDataObject);
+    console.log(user);
 
     const requestOptions = {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user),
     };
 
     try {
@@ -39,12 +42,13 @@ export default function LoginForm() {
 
       if (response.ok) {
         console.log('Logged in successfully', data);
-        auth.login(); // Trigger login method in the authentication hook
+        auth.login(user);
       } else {
-        console.error('Failed to login:', response.status, response.statusText);
+        setError('Failed to login. Please check your username and password.');
       }
     } catch (error) {
       console.error('Error during login:', error);
+      setError('An error occurred during login. Please try again later.');
     }
   };
 
@@ -53,18 +57,19 @@ export default function LoginForm() {
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
-          Enter your username below to login to your account
+          Enter your username and password below to login to your account
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="grid gap-4">
+          {error && <div className="mb-4 text-red-500">{error}</div>}
           <div className="grid gap-2">
-            <Label htmlFor="username">username</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               type="text"
               name="username"
-              placeholder="username"
+              placeholder="Username"
               required
             />
           </div>
