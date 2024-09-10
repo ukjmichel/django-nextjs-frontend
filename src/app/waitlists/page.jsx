@@ -6,11 +6,11 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/fetcher';
 import BaseLayout from '@/components/layout/baseLayout';
 import WaitlistsTable from '@/components/waitlistsTable';
+import WaitlistForm from './forms';
+import { Button } from '@/components/ui';
 
 // Constants
 const WAITLIST_API_URL = '/api/waitlists';
-
-// Utility function to format date as yyyy-mm-dd
 
 export default function WaitlistPage() {
   const auth = useAuth();
@@ -20,18 +20,13 @@ export default function WaitlistPage() {
 
   const [searchId, setSearchId] = useState('');
   const [filteredData, setFilteredData] = useState(null);
-
-  // useEffect(() => {
-  //   if (error?.status === 401) {
-  //     auth.loginRequiredRedirect();
-  //   }
-  // }, [auth, error]);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     if (!auth.isAuthenticated) {
       auth.loginRequiredRedirect();
     }
-  }, []);
+  }, [auth]);
 
   // Filter data based on search ID
   const handleSearch = async (event) => {
@@ -79,28 +74,39 @@ export default function WaitlistPage() {
   if (auth.isAuthenticated) {
     return (
       <BaseLayout>
-        <div className="my-12">
-          {/* Search Form */}
-          <form onSubmit={handleSearch} className="mb-6">
-            <div className="flex items-center">
-              <input
-                type="text"
-                className="border p-2 mr-2 dark:text-secondary-foreground"
-                placeholder="Enter waitlist ID"
-                value={searchId}
-                onChange={(e) => setSearchId(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-              >
-                Search
-              </button>
-            </div>
-          </form>
+        <div className=" my-12">
+          {/* Search Form and Toggle Button */}
+          <div className="flex flex-col">
+            {!showForm ? (
+              <form onSubmit={handleSearch} className="mb-6 m-auto">
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    className="border p-2 mr-2 dark:text-secondary-foreground"
+                    placeholder="Enter waitlist ID"
+                    value={searchId}
+                    onChange={(e) => setSearchId(e.target.value)}
+                  />
+                  <Button type="submit" className="px-4 py-2">
+                    Search
+                  </Button>
+                </div>
+              </form>
+            ) : null}
+            <Button
+              onClick={() => setShowForm(!showForm)}
+              className="mb-4 px-4 py-2"
+            >
+              {showForm ? 'Show Waitlists' : 'Add Waitlist'}
+            </Button>
+          </div>
 
-          {/* Waitlist Table */}
-          <WaitlistsTable displayData={displayData} />
+          {/* Conditional rendering based on showForm state */}
+          {showForm ? (
+            <WaitlistForm />
+          ) : (
+            <WaitlistsTable displayData={displayData} />
+          )}
         </div>
       </BaseLayout>
     );
