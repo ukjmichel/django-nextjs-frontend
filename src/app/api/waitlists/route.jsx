@@ -1,14 +1,10 @@
-// pages/api/waitlists/index.js
-
-import { useAuth } from '@/components/authProvider';
-import { getToken } from '@/lib/auth';
+import { getToken } from '@/lib/auth'; // Ensure this function is correctly implemented
 import { NextResponse } from 'next/server';
 
 const DJANGO_API_WAITLISTS_URL = 'http://127.0.0.1:8000/api/waitlists/';
 
 export async function GET(request) {
   const authToken = await getToken();
-  
 
   if (!authToken) {
     return NextResponse.json(

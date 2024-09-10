@@ -27,23 +27,16 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (user) => {
-    // Check if `user` is defined and has a `name` property
-    if (!user || !user.username) {
-      console.error('Invalid user data:', user);
-      return;
-    }
-
     try {
-      // Perform login API request
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),
       });
+
       const data = await response.json();
 
       if (response.ok) {
-        // On successful login, update state and localStorage
         setIsAuthenticated(true);
         setUsername(user.username);
 
@@ -55,15 +48,14 @@ export function AuthProvider({ children }) {
           })
         );
 
-        // Handle redirection based on `next` URL
         const nextUrl = searchParams.get('next');
-        const invalidNextUrls = ['/login', '/logout'];
-        const nextUrlValid =
-          nextUrl &&
-          nextUrl.startsWith('/') &&
-          !invalidNextUrls.includes(nextUrl);
-
-        router.replace(LOGIN_REDIRECT_URL);
+        if (nextUrl && nextUrl.startsWith('/')) {
+          router.replace(nextUrl); // Redirect to the intended page
+        } else {
+          router.replace(LOGIN_REDIRECT_URL); // Default redirect if no `next` is provided
+        }
+      } else {
+        console.error('Login failed:', data.message);
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -95,7 +87,6 @@ export function AuthProvider({ children }) {
     );
     const loginWithNextUrl = `${LOGIN_REQUIRED_URL}?next=${pathname}`;
     router.replace(loginWithNextUrl);
-    return;
   };
 
   return (

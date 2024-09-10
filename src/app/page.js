@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <BaseLayout>
       <div className="my-12 flex flex-col items-center gap-12">
-        <div className="text-sm text-center sm:text-left">
+        <div className="text-2xl text-center sm:text-left dark:text-secondary-foreground">
           {auth.isAuthenticated ? `Hello ${auth.username}` : 'Hello guest'}
         </div>
       </div>

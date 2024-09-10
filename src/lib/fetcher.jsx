@@ -1,24 +1,26 @@
-export const fetcher = async (url) => {
+export const fetcher = async (url, method = 'GET', token = '', body = null) => {
   try {
-    const res = await fetch(url);
+    const response = await fetch(url, {
+      method,
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: token ? `Bearer ${token}` : '',
+      },
+      body: body ? JSON.stringify(body) : null,
+    });
 
-    // Throw an error if the request was not successful
-    if (!res.ok) {
-      const error = new Error('An error occurred while fetching the data.');
-      error.status = res.status;
+    if (!response.ok) {
+      const errorBody = await response.text();
+      const error = new Error(`An error occurred: ${errorBody}`);
+      error.status = response.status;
       throw error;
     }
 
-    return res.json(); // Return the JSON data if successful
+    return response.json();
   } catch (error) {
-    // Handle errors, you can log or process the error here
-    console.error('Fetch error:', error);
-
-    // If the error has a response status, attach it to the error object
-    if (error.status) {
-      throw new Error(`Error ${error.status}: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred.');
-    }
+    console.error('Fetch error:', error.message, 'Status:', error.status);
+    throw error;
   }
 };
